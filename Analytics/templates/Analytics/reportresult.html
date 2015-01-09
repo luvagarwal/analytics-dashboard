@@ -1,0 +1,179 @@
+{% extends "Analytics/base.html" %}
+
+{% block apparel-photos %}
+<script>
+function show(shown, hidden) {
+  document.getElementById(shown).style.display='block';
+  document.getElementById(hidden).style.display='none';
+  return false;
+}
+</script>
+<div id="Page1" style="display:none">
+    <div>
+    <button type="button" class="btn btn-danger" onclick="return show('Page2','Page1');">Toggle View</button>
+    </div>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Result:</h1>
+    </div>
+</div>
+  {% for a_details in details_report %}
+    <div class="row row-xs-height row-sm-height row-md-height row-lg-height">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: 2px solid #a1a1a1;padding: 10px 40px; background: #dddddd; border-radius: 25px;">
+            <h3> Apparel ID: {{ a_details.0.0 }} </h3>
+            <div class="row">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 portfolio-item">
+                    <a href="#">
+                        <img class="img-responsive img-thumbnail" style="height: 250px; widht: 250px" src="{{ a_details.0.1 }}" id="{{ a_details.0.0 }}" alt="Not Available">
+                    </a>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="border-style:dashed; border-width:6px ; width:42em; padding-top:20px; padding-left:30px ;border-color:grey; ;">
+              
+                <ul class="list-group"><h4>
+                         <li class="list-group-item list-group-item-success">Users tried this Apparel <strong>{{ a_details.1 }}</strong> times.</li>
+                          <li class="list-group-item list-group-item-info">It is shared <strong>{{ a_details.2 }}</strong> times on Facebook.</li>
+                         <li class="list-group-item list-group-item-warning">It is shared  <strong>{{ a_details.3 }} tim</strong>es on Google+.</li>
+                         <li class="list-group-item list-group-item-danger">And other Users followed shared dressy links on Facebook and Google <strong>{{ a_details.4 }}</strong> times.</li></h4>
+                </ul>
+                </div>
+        </div>
+    </div>
+    </div><br><br>
+    {% endfor %}
+
+  </div>
+  <div id="Page2">
+    <button type="button" class="btn btn-success" onclick="return show('Page1','Page2');">Toggle View</button>
+    <br><br>
+<!--         <div class="row row-xs-height row-sm-height row-md-height row-lg-height" style="background-color: white">
+ -->            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="chartpie"  style="border: 2px solid #a1a1a1;padding: 10px 40px; background: #dddddd; width: 46em; border-radius: 25px;" ></div>
+                <div id="monthwise" style="border: 2px solid #a1a1a1;padding: 10px 40px; background: #dddddd; width: 35.1em; border-radius: 25px; float:left; height:523px"><br><br><br></div>
+<!--       >.  </div> -->
+     <!--    <div style="width:100px; height:100px"> this is the div</div> -->
+      <!-- <div class="row row-xs-height row-sm-height row-md-height row-lg-height" style="background-color: white">-->
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="chartline" style="width: 81em; height: 50em; border: 2px solid #a1a1a1;padding: 10px 40px; background: #dddddd; border-radius: 25px;"></div>
+        
+        
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+        data_raw = [['month', 'Tried', 'Share', 'Follow']]
+        {% for report in time_report %}
+            temp_list = []
+            temp_list[0] = "October"
+            temp_list[1] = Number("{{ report.0 }}")
+            temp_list[2] = Number("{{ report.1 }}")
+            temp_list[3] = Number("{{ report.2 }}")
+            data_raw.push(temp_list)
+        {% endfor %}
+          var data = google.visualization.arrayToDataTable(data_raw);
+          var options = {
+            title: 'User Activities month wise',
+            hAxis: {title: 'Year', titleTextStyle: {color: 'red'}},
+            backgroundColor: '#dddddd'
+          };
+
+          var chart = new google.visualization.ColumnChart(document.getElementById('monthwise'));
+
+          chart.draw(data, options);
+        }
+        
+    </script>
+   <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        data_raw = [['ApparelID', 'TotalActivity', 'TriedApparels', 'SharedFB', 'SharedGP', 'Followed']]
+        {% for a_details in details_report %}
+            temp_list = []
+            temp_list[0] = "{{ a_details.0.0 }}"
+            temp_list[2] = Number("{{ a_details.1 }}")
+            temp_list[3] = Number("{{ a_details.2 }}")
+            temp_list[4] = Number("{{ a_details.3 }}")
+            temp_list[5] = Number("{{ a_details.4 }}")
+            temp_list[1] = temp_list[2]+temp_list[3]+temp_list[4]+temp_list[5]
+            data_raw.push(temp_list)
+        {% endfor %}
+        function compare(a, b)
+        {
+            return b[1]-a[1];
+        }
+        data_raw.sort(compare)
+        var data = google.visualization.arrayToDataTable(data_raw);
+
+        var options = {
+          title: 'Top Apparels (Activities of users on apparels in decreasing order)',
+          vAxis: {title: 'ApparelID',  titleTextStyle: {color: 'red'}},
+          backgroundColor: '#dddddd',
+
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('chartline'));
+
+        chart.draw(data, options);
+      }
+    </script>  
+    <script type="text/javascript">
+        var tryApp = 0;
+        var shareFB = 0;
+        var shareGP = 0;
+        var follow = 0;
+        {% for a_details in details_report %}
+            
+            tryApp += Number("{{ a_details.1 }}")
+            shareFB += Number("{{ a_details.2 }}")
+            shareGP += Number("{{ a_details.3 }}")
+            follow += Number("{{ a_details.4 }}")
+
+        {% endfor %}
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1.0', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.setOnLoadCallback(drawChart);
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Tping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['tryApp', tryApp],
+          ['shareFB', shareFB],
+          ['shareGP', shareGP],
+          ['follow', follow]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Activities on apparels in your selected price range',
+                       'width':600,
+                       'height':500,
+                        'backgroundColor': '#dddddd'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chartpie'));
+        chart.draw(data, options);
+        }
+    </script>
+    
+  </div>
+{% endblock %}
+
+{% block login %}
+<li><a href='/Analytics/logout'>Logout</a></li>
+{% endblock %}
+{% block link-myapparels %}
+    '/Analytics/dashboard'
+{% endblock %}
+
+{% block link-reports %}
+    '/Analytics/reports'
+{% endblock %}  

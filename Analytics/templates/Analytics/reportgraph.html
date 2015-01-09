@@ -1,0 +1,108 @@
+{% extends "Analytics/base.html" %}
+
+{% block apparel-photos %}
+
+<!-- <div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Result:</h1>
+    </div>
+</div> -->
+        <div class="row row-xs-height row-sm-height row-md-height row-lg-height" style="background-color: grey">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="chartline" style="width: 900px; height: 800px;"></div>
+        </div>
+        <div class="row row-xs-height row-sm-height row-md-height row-lg-height" style="background-color: grey">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="chartpie" ></div>
+        </div>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        var tryApp = 0;
+        var shareFB = 0;
+        var shareGP = 0;
+        var follow = 0;
+        {% for a_details in details_report %}
+            
+            tryApp += Number("{{ a_details.1 }}")
+            shareFB += Number("{{ a_details.2 }}")
+            shareGP += Number("{{ a_details.3 }}")
+            follow += Number("{{ a_details.4 }}")
+
+        {% endfor %}
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1.0', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.setOnLoadCallback(drawChart);
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and
+        // draws it.
+        function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Tping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['tryApp', tryApp],
+          ['shareFB', shareFB],
+          ['shareGP', shareGP],
+          ['follow', follow]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Activities on apparels in your selected price range',
+                       'width':600,
+                       'height':500,
+                        'backgroundColor': 'grey'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chartpie'));
+        chart.draw(data, options);
+        }
+    </script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        data_raw = [['ApparelID', 'TotalActivity', 'TriedApparels', 'SharedFB', 'SharedGP', 'Followed']]
+        {% for a_details in details_report %}
+            temp_list = []
+            temp_list[0] = "{{ a_details.0.0 }}"
+            temp_list[2] = Number("{{ a_details.1 }}")
+            temp_list[3] = Number("{{ a_details.2 }}")
+            temp_list[4] = Number("{{ a_details.3 }}")
+            temp_list[5] = Number("{{ a_details.4 }}")
+            temp_list[1] = temp_list[2]+temp_list[3]+temp_list[4]+temp_list[5]
+            data_raw.push(temp_list)
+        {% endfor %}
+        function compare(a, b)
+        {
+            return b[1]-a[1];
+        }
+        data_raw.sort(compare)
+        var data = google.visualization.arrayToDataTable(data_raw);
+
+        var options = {
+          title: 'Top Apparels (Activities of users on apparels in decreasing order)',
+          vAxis: {title: 'ApparelID',  titleTextStyle: {color: 'red'}},
+          backgroundColor: 'grey'
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('chartline'));
+
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock %}
+
+{% block login %}
+ <li><a href='/Analytics/logout'>Logout</a></li>
+{% endblock %}
+{% block link-myapparels %}
+    '/Analytics/dashboard'
+{% endblock %}
+
+{% block link-reports %}
+    '/Analytics/reports'
+{% endblock %}

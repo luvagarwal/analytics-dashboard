@@ -1,0 +1,19 @@
+If Entity at x axis
+-------------------
+price->0 1000 2000 3000 ....
+os->Linux(ubuntu, fedora), windows,
+browser->firefox, chrome, safari,
+device->mobile, pc
+date->4 options prompt -> hourly, daily, monthly, yearly
+age->0 10 20 30 40 50
+gender->male female
+
+If Entity as filter
+-------------------
+price->range
+os->Linux(ubuntu, fedora), windows,
+browser->firefox, chrome, safari,
+device->mobile, pc
+date->range
+age->range
+gender->male, female

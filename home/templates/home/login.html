@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>Dres.sy</title>
+{% load staticfiles %}
+</head>
+<style>
+body
+{
+	background-color:black;
+}
+#qwerty
+{
+	margin-left:350px;
+	margin-top:150px;
+	margin-right:350px;
+	background-color:white;
+}
+</style>
+<body >
+<center><font color="white"><h2>LOGIN</h2></font></center>
+<link href={% static "home/css/7.css" %} rel="stylesheet">
+<div id=qwerty height=700 width=200 >
+<div class="social-wrap a">
+<br><br><br>
+<center><a href="/accounts/facebook/login" style="text-decoration:none;"><button id="facebook">Sign in with Facebook</button></a></center>
+<center><a href="/accounts/google/login" style="text-decoration:none;"><button id="googleplus">Sign in with Google</button></a></center>
+<br><br>
+<br><br>
+</div>
+</div>
+</body>
+</html>

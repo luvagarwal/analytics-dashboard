@@ -1,0 +1,24 @@
+{% extends "Analytics/base.html" %}
+
+{% block apparel-photos %}
+<div class="row">
+    <h1>Filters:</h1>
+</div>
+<form method="get" action="/Analytics/report">
+    {{ ReportForm.as_table }}
+    <div>
+        <input type="submit" value='Generate'></input>
+    </div>
+</form>
+{% endblock %}
+
+{% block login %}
+ <li><a href='/Analytics/logout'>Logout</a></li>
+{% endblock %}
+{% block link-myapparels %}
+    '/Analytics/dashboard'
+{% endblock %}
+
+{% block link-reports %}
+    '/Analytics/reports'
+{% endblock %}
